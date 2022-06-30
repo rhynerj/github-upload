@@ -89,3 +89,11 @@ GitHub.sublime-settings
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+
+# data files (dynamically downloaded by code)
+*.tar
+*.tar.gz
+*.zip
+*.png
+*.csv
+codebook.txt
