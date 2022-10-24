@@ -44,7 +44,29 @@ def dataset_retrieve(url, archive, f_type) :
     if f_type == "tar" :
         # unzip the archive
         with tarfile.open(archive, 'r:gz') as opened_archive :
-             opened_archive.extractall()
+             
+             import os
+             
+             def is_within_directory(directory, target):
+                 
+                 abs_directory = os.path.abspath(directory)
+                 abs_target = os.path.abspath(target)
+             
+                 prefix = os.path.commonprefix([abs_directory, abs_target])
+                 
+                 return prefix == abs_directory
+             
+             def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+             
+                 for member in tar.getmembers():
+                     member_path = os.path.join(path, member.name)
+                     if not is_within_directory(path, member_path):
+                         raise Exception("Attempted Path Traversal in Tar File")
+             
+                 tar.extractall(path, members, numeric_owner=numeric_owner) 
+                 
+             
+             safe_extract(opened_archive)
     elif f_type == "zip" :
         # unzip the archive
         with zipfile.ZipFile(archive, 'r') as opened_archive :
